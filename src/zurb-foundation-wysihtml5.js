@@ -86,22 +86,23 @@
 
         "image": function(locale, options) {
             var size = (options && options.size) ? ' button-'+options.size : '';
-            return "<li>" +
-              "<div class='zurb-foundation-wysihtml5-insert-image-modal reveal-modal hide fade'>" +
-                "<div class='modal-header'>" +
-                  "<a class='close-reveal-modal'>&#215;</a>" +
-                  "<h3>" + locale.image.insert + "</h3>" +
-                "</div>" +
-                "<div class='modal-body'>" +
-                  "<input value='http://' class='zurb-foundation-wysihtml5-insert-image-url input-xlarge'>" +
-                "</div>" +
-                "<div class='modal-footer'>" +
-                  "<a href='#' class='button secondary close-reveal-modal'>" + locale.image.cancel + "</a>" +
-                  "<a href='#' class='button close-reveal-modal action-insert'>" + locale.image.insert + "</a>" +
-                "</div>" +
-              "</div>" +
-              "<a class='button secondary " + size + "' data-wysihtml5-command='insertImage' title='" + locale.image.insert + "' tabindex='-1'><i class='gicon-picture'></i></a>" +
-            "</li>";
+
+            return '<li>' +
+            '<div id="zurb-foundation-wysihtml5-insert-image-modal" class="zurb-foundation-wysihtml5-insert-image-modal reveal-modal small hide fade">' +
+              '<div class="modal-header">' +
+                '<h3>' + locale.image.insert + '</h3>' +
+              '</div>' +
+              '<div class="modal-body">' +
+                '<input value="http://" class="zurb-foundation-wysihtml5-insert-image-url" input-xlarge>' +
+              '</div>' +
+              '<div class="modal-footer">' +
+                '<a href="#" class="button secondary action-close">' + locale.image.cancel + '</a>' +
+                '<a href="#" class="button action-insert action-close">' + locale.image.insert + '</a>' +
+              '</div>' +
+              '<a class="close-reveal-modal">&#215;</a>' +
+            '</div>' +
+            '<a class="button secondary' + size + '" data-wysihtml5-command="insertImage" title="' + locale.image.insert + '" tabindex="-1" href="#" data-reveal-id="zurb-foundation-wysihtml5-insert-image-modal"><i class="gicon-picture"></i></a>' +
+            '</li>';
         },
 
         "html": function(locale, options) {
@@ -266,7 +267,7 @@
             urlInput.keypress(function(e) {
                 if(e.which == 13) {
                     insertImage();
-                    insertImageModal.trigger('reveal:close');
+                    insertImageModal.foundation('reveal', 'close');
                 }
             });
 
@@ -286,8 +287,9 @@
                 if (!activeButton) {
                     self.editor.currentView.element.focus(false);
                     caretBookmark = self.editor.composer.selection.getBookmark();
-                    insertImageModal.reveal();
-                    insertImageModal.on('click', '.close-reveal-modal', function(e) {
+                    insertImageModal.appendTo('body').foundation('reveal', 'open');
+                    insertImageModal.on('click', '.close-reveal-modal, .action-close', function(e) {
+                        insertImageModal.appendTo('body').foundation('reveal', 'close');
                         e.preventDefault();
                     });
                     return false;
