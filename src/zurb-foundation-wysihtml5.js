@@ -43,10 +43,10 @@
             "</li>";
         },
 
-        "link": function(locale, options) {
+      /*  "link": function(locale, options) {
             var size = (options && options.size) ? ' button-'+options.size : '';
             return "<li>" +
-              "<div class='zurb-foundation-wysihtml5-insert-link-modal reveal-modal hide fade'>" +
+              "<div class='zurb-foundation-wysihtml5-insert-link-modal reveal-modal small hide fade'>" +
                 "<div class='modal-header'>" +
                   "<a class='close-reveal-modal'>&#215;</a>" +
                   "<h3>" + locale.link.insert + "</h3>" +
@@ -61,6 +61,27 @@
               "</div>" +
               "<a class='button secondary" + size + "' data-wysihtml5-command='createLink' title='" + locale.link.insert + "' tabindex='-1'><i class='gicon-share'></i></a>" +
             "</li>";
+        },*/
+
+        "link": function(locale, options) {
+            var size = (options && options.size) ? ' button-'+options.size : '';
+
+            return '<li>' +
+            '<div id="zurb-foundation-wysihtml5-insert-link-modal" class="zurb-foundation-wysihtml5-insert-link-modal reveal-modal small hide fade">' +
+              '<div class="modal-header">' +
+                '<h3>' + locale.link.insert + '</h3>' +
+              '</div>' +
+              '<div class="modal-body">' +
+                '<input value="http://" class="zurb-foundation-wysihtml5-insert-link-url input-xlarge">' +
+              '</div>' +
+              '<div class="modal-footer">' +
+                '<a href="#" class="button secondary action-close">' + locale.link.cancel + '</a>' +
+                '<a href="#" class="button action-insert action-close">' + locale.link.insert + '</a>' +
+              '</div>' +
+              '<a class="close-reveal-modal">&#215;</a>' +
+            '</div>' +
+            '<a class="button secondary' + size + '" data-wysihtml5-command="createLink" title="' + locale.link.insert + '" tabindex="-1" href="#" data-reveal-id="zurb-foundation-wysihtml5-insert-link-modal"><i class="gicon-share"></i></a>' +
+            '</li>';
         },
 
         "image": function(locale, options) {
@@ -304,7 +325,7 @@
             urlInput.keypress(function(e) {
                 if(e.which == 13) {
                     insertLink();
-                    insertLinkModal.trigger('reveal:close');
+                    insertLinkModal.foundation('reveal', 'close');
                 }
             });
 
@@ -324,13 +345,16 @@
                 if (!activeButton) {
                     self.editor.currentView.element.focus(false);
                     caretBookmark = self.editor.composer.selection.getBookmark();
-                    insertLinkModal.appendTo('body').reveal();
-                    insertLinkModal.on('click', '.close-reveal-modal', function(e) {
+                    insertLinkModal.appendTo('body').foundation('reveal', 'open');
+                    insertLinkModal.on('click', '.close-reveal-modal, .action-close', function(e) {
+                        insertLinkModal.appendTo('body').foundation('reveal', 'close');
                         e.preventDefault();
                     });
+                    console.log('not active');
                     return false;
                 }
                 else {
+                    console.log('active');
                     return true;
                 }
             });
